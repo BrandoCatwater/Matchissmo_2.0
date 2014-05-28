@@ -12,6 +12,9 @@
 
 @interface CardGameViewController : UIViewController
 
+@property (nonatomic) NSUInteger numberOfStartingCards;
+@property (nonatomic) CGSize maxCardSize;
+
 // protected
 // for subclasses
 - (Deck *)createDeck; // abstract
@@ -20,7 +23,6 @@
 - (UIImage *)backgroundImageForCard:(Card *)card;
 - (void)updateUI;
 
-@property (weak, nonatomic) IBOutlet UILabel *flipDescription;
-@property (strong, nonatomic) NSMutableArray *flipHistory; // of NSStrings
+
 
 @end
