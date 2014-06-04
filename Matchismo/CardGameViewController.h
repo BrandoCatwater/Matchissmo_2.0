@@ -15,6 +15,7 @@
 @property (nonatomic) NSUInteger numberOfStartingCards;
 @property (nonatomic) CGSize maxCardSize;
 @property (strong, nonatomic) NSString *gameType;
+@property (nonatomic) BOOL removeMatchingCards;
 
 // protected
 // for subclasses
