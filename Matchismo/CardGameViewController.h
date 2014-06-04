@@ -14,13 +14,14 @@
 
 @property (nonatomic) NSUInteger numberOfStartingCards;
 @property (nonatomic) CGSize maxCardSize;
+@property (strong, nonatomic) NSString *gameType;
 
 // protected
 // for subclasses
 - (Deck *)createDeck; // abstract
 
-- (NSAttributedString *)titleForCard:(Card *)card;
-- (UIImage *)backgroundImageForCard:(Card *)card;
+- (UIView *)createViewForCard:(Card *)card;
+- (void)updateView:(UIView *)view forCard:(Card *)card;
 - (void)updateUI;
 
 
