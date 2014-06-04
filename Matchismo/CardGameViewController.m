@@ -19,6 +19,8 @@
 @property (weak, nonatomic) IBOutlet UIView *gridView;
 @property (strong, nonatomic) NSMutableArray *cardViews;
 @property (strong, nonatomic) Grid *grid;
+@property (weak, nonatomic) IBOutlet UIButton *addCardsButton;
+
 
 @end
 
@@ -59,7 +61,24 @@
     
 - (IBAction)touchDealButton:(UIButton *)sender {
     self.game = nil;
+    for (UIView *subView in self.cardViews){
+        [subView removeFromSuperview];
+    }
     self.cardViews = nil;
+    self.grid = nil;
+    self.addCardsButton.enabled = YES;
+    self.addCardsButton.alpha = 1.0;
+    [self updateUI];
+}
+
+- (IBAction)touchAddCardsButton:(UIButton *)sender {
+    for (int i = 0; i < sender.tag; i++) {
+        [self.game drawNewCard];
+    }
+    if (self.game.deckIsEmpty){
+        sender.enabled = NO;
+        sender.alpha = 0.5;
+    }
     [self updateUI];
 }
 
@@ -78,23 +97,34 @@
         
         UIView *cardView;
         if (viewIndex == NSNotFound){
-            cardView = [self createViewForCard:card];
-            cardView.tag = cardIndex;
-            UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchCard:)];
-            [cardView addGestureRecognizer:tap];
-            [self.cardViews addObject:cardView];
-            viewIndex = [self.cardViews indexOfObject:cardView];
-            [self.gridView addSubview:cardView];
+            if (!card.matched) {
+                
+                cardView = [self createViewForCard:card];
+                cardView.tag = cardIndex;
+                UITapGestureRecognizer *tap = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(touchCard:)];
+                [cardView addGestureRecognizer:tap];
+                [self.cardViews addObject:cardView];
+                viewIndex = [self.cardViews indexOfObject:cardView];
+                [self.gridView addSubview:cardView];
+            }
         } else {
             cardView = self.cardViews[viewIndex];
-            [self updateView:cardView forCard:card];
-            cardView.alpha = card.matched ? 0.6 : 1.0;
+            if (!card.matched){
+                [self updateView:cardView forCard:card];
+            } else {
+                [cardView removeFromSuperview];
+                [self.cardViews removeObject:cardView];
+            }
         }
-        
+    }
+    self.grid.minimumNumberOfCells = [self.cardViews count];
+    for (NSUInteger viewIndex = 0; viewIndex < [self.cardViews count]; viewIndex++) {
         CGRect frame = [self.grid frameOfCellAtRow:viewIndex / self.grid.columnCount inColumn:viewIndex % self.grid.columnCount];
         frame = CGRectInset(frame, frame.size.width * CARDSPACINGINPERCENT, frame.size.height * CARDSPACINGINPERCENT);
-        cardView.frame = frame;
+        ((UIView *)self.cardViews[viewIndex]).frame = frame;
     }
+    
+    
     self.scoreLabel.text = [NSString stringWithFormat:@"Score: %d", self.game.score];
     //self.gameResult.score = self.game.score;
     
