@@ -195,5 +195,17 @@
     }
 }
 
+-(void)viewDidLoad
+{
+    [super viewDidLoad];
+    [self.view setAutoresizingMask:UIViewAutoresizingFlexibleWidth | UIViewAutoresizingFlexibleHeight];
+}
+
+- (void)didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    self.grid.size = self.gridView.bounds.size;
+    [self updateUI];
+}
+
 
 @end
