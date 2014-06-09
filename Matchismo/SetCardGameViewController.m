@@ -14,6 +14,7 @@
 
 
 @interface SetCardGameViewController ()
+@property (weak, nonatomic) IBOutlet UIButton *addCardsButton;
 
 @end
 
@@ -45,6 +46,8 @@
     setCardView.chosen = setCard.chosen;
     
 }
+
+
 
 - (void)viewDidLoad
 {
